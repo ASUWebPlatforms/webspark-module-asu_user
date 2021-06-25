@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * asu_user.module - ASU User code.
+ *
+ * @author
+ * Dan Poenaru <dan.poenaru@deptagency.com>
+ *
+ * Module provides customization functions for the users. Some code is from the
+ * asu_userpicker made by Michael Samuelson.
+ *
+ */
+
+/**
+ * API function to get a person/profile record from Solr.
+ *
+ * @param string/int $asurite An ASURITE.
+ *
+ * @return array Solr record for profile.
+ */
+function _asu_user_get_solr_profile_record($asurite) {
+
+  // Abort.
+  if (is_null($asurite)) {
+    return;
+  }
+
+  // Do Solr query ala https://webapp4.asu.edu/solr/directory/select?q=%7B!edismax%7DasuriteId:myasurite&rows=1&wt=json
+  // And populate $record.
+  $solr_base_url = \Drupal::config('asu_user.settings')->get('asu_user_solr_query_url');
+  $solr_query_url = $solr_base_url . '?q=asuriteId:' . \Drupal\Component\Utility\Html::escape($asurite) . '&rows=1&wt=json';
+
+  $client = \Drupal::httpClient();
+  try {
+    $response = $client->get($solr_query_url);
+    $data = $response->getBody()->getContents();
+
+    $solr_data = \Drupal\Component\Serialization\Json::decode($data);
+
+    // Check here that the asurite ID is a 100% match with the record, as
+    // Solr does a "contains" match.
+    $record = NULL;
+    $solr_count = $solr_data['response']['numFound'];
+    if ($solr_count > 0) {
+      foreach($solr_data['response']['docs'] as $doc_delta => $doc) {
+        if ($doc['asuriteId'] == $asurite) {
+          $record = $solr_data['response']['docs'][$doc_delta];
+        }
+      }
+    }
+    return $record; // Should only be one.
+  }
+  catch (Exception $e) {
+    watchdog_exception('asu_user', $e);
+    return [];
+  }
+  return [];
+}
+
