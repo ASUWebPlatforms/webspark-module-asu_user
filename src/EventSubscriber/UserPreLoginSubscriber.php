@@ -26,7 +26,7 @@ class UserPreLoginSubscriber implements EventSubscriberInterface {
   /**
    * Subscribe to the user login event dispatched.
    *
-   * @param \Drupal\custom_events\Event\CasPreLoginEvent $event
+   * @param \Drupal\cas\Event\CasPreLoginEvent $event
    * 
    */
   public function onUserPreLogin(CasPreLoginEvent $event) {

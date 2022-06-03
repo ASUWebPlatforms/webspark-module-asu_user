@@ -15,7 +15,7 @@
 /**
  * API function to get a person/profile record from Solr.
  *
- * @param string/int $asurite An ASURITE.
+ * @param string|int $asurite An ASURITE.
  *
  * @return array Solr record for profile.
  */
