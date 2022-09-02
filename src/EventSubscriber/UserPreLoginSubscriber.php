@@ -27,27 +27,27 @@ class UserPreLoginSubscriber implements EventSubscriberInterface {
    * Subscribe to the user login event dispatched.
    *
    * @param \Drupal\cas\Event\CasPreLoginEvent $event
-   * 
+   *
    */
   public function onUserPreLogin(CasPreLoginEvent $event) {
     $account = $event->getAccount();
     $propertyBag = $event->getCasPropertyBag();
     $cas_username = $propertyBag->getUsername();
-    
+
     // If this account signed with the asu account.
     $employee = FALSE;
     if ($cas_username) {
       $asu_profile = _asu_user_get_solr_profile_record($cas_username);
-      $affiliations = isset($asu_profile['affiliations']) ? $asu_profile['affiliations'] : [];
-      // Search for the "Employee" affilliation and set the employ role for that account.
+      $affiliations = $asu_profile['affiliations']['raw'] ?? [];
+      // Search for the "Employee" affiliation and set the employ role for that account.
       if (in_array('Employee', $affiliations)) {
         $employee = TRUE;
       }
     }
     if ($employee && !$account->hasRole('employee')) {
       $account->addRole('employee');
-      // We save because the cas altough it saves the account after this event,
-      // it doesnt add the ability to modify the variables.
+      // We save the cas here because, although it saves the account after this
+      // event, it doesn't add the ability to modify the variables.
       $account->save();
     }
     if (!$employee && $account->hasRole('employee')) {
