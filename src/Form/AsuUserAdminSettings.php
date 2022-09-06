@@ -35,12 +35,12 @@ class AsuUserAdminSettings extends ConfigFormBase {
    */
   public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
 
-    // Solr server query URL to use.
-    $form['asu_user_solr_query_url'] = [
+    // elastic server query URL to use.
+    $form['asu_user_elastic_query_url'] = [
       '#type' => 'textfield',
-      '#default_value' => \Drupal::config('asu_user.settings')->get('asu_user_solr_query_url'),
-      '#title' => $this->t('ASU Solr Query URL'),
-      '#description' => $this->t('Provide the ASU Solr People Query URL. Probably https://asudir-solr.asu.edu/asudir/directory/select'),
+      '#default_value' => \Drupal::config('asu_user.settings')->get('asu_user_elastic_query_url'),
+      '#title' => $this->t('ASU elastic Query URL'),
+      '#description' => $this->t('Provide the ASU elastic People Query URL. Probably https://asudir-elastic.asu.edu/asudir/directory/select'),
       '#required' => TRUE,
     ];
 
@@ -52,7 +52,7 @@ class AsuUserAdminSettings extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('asu_user.settings');
-    $config->set('asu_user_solr_query_url', $form_state->getValue('asu_user_solr_query_url'));
+    $config->set('asu_user_elastic_query_url', $form_state->getValue('asu_user_elastic_query_url'));
     $config->save();
     return parent::submitForm($form, $form_state);
   }

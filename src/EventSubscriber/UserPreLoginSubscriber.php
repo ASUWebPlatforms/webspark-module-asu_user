@@ -37,7 +37,7 @@ class UserPreLoginSubscriber implements EventSubscriberInterface {
     // If this account signed with the asu account.
     $employee = FALSE;
     if ($cas_username) {
-      $asu_profile = _asu_user_get_solr_profile_record($cas_username);
+      $asu_profile = _asu_user_get_elastic_profile_record($cas_username);
       $affiliations = $asu_profile['affiliations']['raw'] ?? [];
       // Search for the "Employee" affiliation and set the employ role for that account.
       if (in_array('Employee', $affiliations)) {
