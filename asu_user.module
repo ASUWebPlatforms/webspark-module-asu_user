@@ -41,11 +41,11 @@ function _asu_user_get_elastic_profile_record($asurite) {
     // Check here that the asurite ID is a 100% match with the record, as
     // Elastic does a "contains" match.
     $record = NULL;
-    $elastic_count = $elastic_data['response']['numFound'];
+    $elastic_count = $elastic_data['meta']['page']['total_results'];
     if ($elastic_count > 0) {
-      foreach($elastic_data['response']['docs'] as $doc_delta => $doc) {
-        if ($doc['asuriteId'] == $asurite) {
-          $record = $elastic_data['response']['docs'][$doc_delta];
+      foreach ($elastic_data['results'] as $result) {
+        if ($result['asurite_id']['raw'] == $asurite) {
+          $record = $result;
         }
       }
     }
