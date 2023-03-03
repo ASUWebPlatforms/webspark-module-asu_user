@@ -21,8 +21,8 @@ node_modules/@asu-design-system/component-events/dist/*
 .idea/
 
 # Config management script output
-/config/_config_changes.diff
-/config/**/_diff_commands.bash
-*APPLY.patch
-.DS_Store*
-
+config/_changes.diff
+config/**/_diff_commands.bash
+*APPLICABLE.patch
+.DS_Store
+*.DS_Store
